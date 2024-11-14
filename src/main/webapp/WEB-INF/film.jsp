@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Film Information</title>
+<%@  include file="bootstraphead.jsp" %>
 </head>
 <body>
 	<h1>Film Information</h1>
@@ -16,19 +17,14 @@
 		     Id: ${film.id}<br>
 		     Description: ${film.description}<br>
 	</c:if>
+	<c:if test="${empty film }">
+		<h3>No such Film found!</h3>
+	</c:if>
 </body>	
 
 <head>
-<title>Actor Information</title>
-</head>
-<body>	
-	<c:if test="${! empty actor }">
-		Id: ${actor.id}<br>
-		First Name: ${actor.firstName}<br>
-		Last Name: ${actor.lastName}<br>
-	</c:if>
-</body>
-	
 
+	
+<%@  include file="bootstrapfooter.jsp" %>
 </body>
 </html>

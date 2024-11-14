@@ -3,4 +3,6 @@ bin
 build
 default
 target
+*.war
+.gradle
 .classpath

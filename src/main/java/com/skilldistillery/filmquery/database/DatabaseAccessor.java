@@ -27,7 +27,7 @@ public interface DatabaseAccessor
 	
 	public Film findFilmAndActorsByFilmId(int filmId);
 
-	public Film createFilm(Film film);
+	public Film createFilm(String title, String description);
 
 	public boolean deleteFilm(Film film);
 

@@ -1,6 +1,8 @@
 package com.skilldistillery.filmquery.controllers;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +53,73 @@ public class FilmController
 		return mv;
 	}  // end findFilmByFilmID
 	
+
+	
+	@RequestMapping(path="findAllFilms.do", method=RequestMethod.GET)
+	public ModelAndView findAllFilmsInDB()
+	{
+		List<Film> filmList = new ArrayList<Film>();
+		ModelAndView mv = new ModelAndView();
+		
+		try
+		{
+			filmList = dao.getListOfAllFilms();
+			mv.addObject("films", filmList);
+			mv.setViewName("WEB-INF/films.jsp");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			
+		}
+		
+		return mv;
+	}  // end search for get list of all films
+	
+
+	@RequestMapping(path="findFilmsByKeyword.do", method=RequestMethod.GET, params="keyword")
+	public ModelAndView findFilmsByKeyword(@RequestParam("keyword") String keyword)
+	{
+		List<Film> filmList = new ArrayList<Film>();
+		ModelAndView mv = new ModelAndView();
+		
+		try
+		{
+			filmList = dao.findFilmsByKeyword(keyword);
+			mv.addObject("films", filmList);
+			mv.setViewName("WEB-INF/films.jsp");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			
+		}
+		
+		return mv;
+	}  // end search for film by keyword
+	
+	
+	@RequestMapping(path="createFilm.do", method=RequestMethod.GET, params={"Title","Description"})
+	public ModelAndView createFilm(@RequestParam("Title") String Title, @RequestParam("Description") String Description)
+	{
+		Film film = null;
+		ModelAndView mv = new ModelAndView();
+		
+		try
+		{
+			film = dao.createFilm(Title, Description);
+			mv.addObject("film", film);
+			mv.setViewName("WEB-INF/film.jsp");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			
+		}
+		
+		return mv;
+	}  // end search for film by keyword
+	
 	
 	@RequestMapping(path="updateFilm.do", method=RequestMethod.GET, params="id")
 	public ModelAndView updateFilm(@RequestParam("id") int filmId)
@@ -61,7 +130,7 @@ public class FilmController
 		try
 		{
 			film = dao.findFilmById(filmId);
-			mv.addObject("actor", film);
+			mv.addObject("film", film);
 			mv.setViewName("WEB-INF/film.jsp");
 		}
 		catch (Exception e)
@@ -72,8 +141,8 @@ public class FilmController
 		
 		return mv;
 	}  // end edit film id
-	
-	
+
+
 	@RequestMapping(path="findActorById.do", method=RequestMethod.GET, params="id")
 	public ModelAndView findActorById(@RequestParam("id") int actorId)
 	{
@@ -94,9 +163,6 @@ public class FilmController
 		
 		return mv;
 	}  // end find actor by actor id
-	
-
-	
 	
 
 }

@@ -11,6 +11,8 @@ copy and paste from previous projects is a huge help.
 
 using the 13 steps also provides a strong foundation for the Spring MVC
 
+be very very careful with names from index.do to filmcontroller, they must! match
+
 
 ### Lab portion of work
 #### User Story #1
@@ -19,6 +21,7 @@ Completed in class
 A user can enter a Film's ID and see the details of the film in a web page. If the film is not found, they see an appropriate message.
 
 #### User Story #2
+
 A user can choose to add a new film. They can enter all the properties of the film. Their input will be used to create Film object, which the DAO implementation will save in the database. If the insert fails, the user is informed of this.
 
 #### User Story #3
@@ -31,6 +34,8 @@ When a user retrieves a film, they have the option of editing it. If they choose
 
 
 #### User Story #5
+completed in class 11/11/24
+
 A user can search for films by keyword/pattern in title or description. From the resulting list of films, the user can choose to update or delete a record.
 
 #### User Story #6

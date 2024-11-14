@@ -36,10 +36,13 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 	}
 	
 	@Override
-	public Film createFilm(Film film) 
+	public Film createFilm(String title, String description) 
 	{
 		// each method manages its own connection
 		Connection conn = null;
+		int newFilmId = 0;
+		System.out.println("title entered is " + title);
+		System.out.println("description is " + description);
 
 		try 
 		{
@@ -48,17 +51,17 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 			conn.setAutoCommit(false);
 
 			// We'll be filling in the film's title, language_id - defaulting to 1, and description
-			String sql = "INSERT INTO film (title, language_id, description) VALUES (?,?,?)";
-
+			String sql = "INSERT INTO film (title, language_id, description) VALUES (? ,? ,?)";
+			System.out.println("sql is " + sql);
 			
 			// compile / optimize the sql into the db, and request the generated keys be
 			// Accessible
 			PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			// bind (assign) the name fields into our sql statements bind vars
-			stmt.setString(1, film.getTitle());
+			stmt.setString(1, title);
 			stmt.setInt(2, 1); // not prompting user for language, using default of 1
-			stmt.setString(3, film.getDescription());
+			stmt.setString(3, description);
 
 			// run the query in the database
 			int updateCount = stmt.executeUpdate();
@@ -68,15 +71,16 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 			{
 				// good news: we can grab this new Film's id
 				ResultSet keys = stmt.getGeneratedKeys();
+				System.out.println("keys = " + keys);
 
 				// we're expecting just 1 generated key since inserting one new film
 				if (keys.next()) 
 				{
 					// grab the generated key (id)
-					int newFilmId = keys.getInt(1);
+					newFilmId = keys.getInt(1);
 
 					// change the initial id in our Java entity to film's 'real' id
-					film.setId(newFilmId);
+					
 				}
 
 				// an explicit commit of the transaction is required to prevent a rollback
@@ -211,60 +215,51 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 	@Override
 	public List<Film> getListOfAllFilms()
 	{
-		List<Film> filmList = new ArrayList<Film>();
-		int numberOfFilms = countNumberOfAllFilms();
-		Film film = new Film();
-		String title = null;
-		String description = null;
-		int languageId = 1;
+		List<Film> filmList = new ArrayList<>();
+		Film film = null;
 		
-		//System.out.println("\n\njust inside getListOfAllFilms");
-		//System.out.println("number of films is numberOfFilms " + numberOfFilms);
+		try
+		{
+			conn = DriverManager.getConnection(URL, user, pass);
+			String sqltext = "select * from film";
+			PreparedStatement stmt = conn.prepareStatement(sqltext);
+			
+			ResultSet results = stmt.executeQuery();
 		
-
-		// going to do something funky here
-		// originally had 1000 films in db so for this exercise
-		// only going to allow deletion of newly added films
-		// so any number less than the original 1000 can not be considered for deletion
-		// can change to get full list by changing id to 1
-		// only returning list of newly added films
-		if (numberOfFilms <= 1000)
-		{
-			System.out.println("\n\nThere are no films that you are allowed to delete at the moment");
-			System.out.println("Please add a film to the library or choose another option");
-			return null;
-		}
-		// can only add films > 1000 to film list
-		// some may be null because of odd deletions
-		int id = 1001;
-		int maxId = getMaxIdFromFilmTable();
-		//System.out.println("id = " + id);
-		//System.out.println("maxId = " + maxId);
-
-		for (; id <= maxId; id++) 
-		{
-			 
-			 film = findFilmAndActorsByFilmId(id);
-		     
-			 if (film != null )
-			 {
-				 title = film.getTitle();
-				 description = film.getDescription();
-				 
-			     film = new Film(id, title, languageId, description );
-			     //System.out.println("\n\nadd film id " + film.getId() + " to filmList");
-			     //System.out.println("add film language = " + film.getLanguageId() + " to filmList");
-			     //System.out.println("add film description = " + film.getDescription() + " to filmList");
-			     //System.out.println("\nFilm = " +  film.toString());
-			     filmList.add(film);
-			 } // end check to make sure id isn't null
-			 else
-			 {
-				 //System.out.println("adding null film to film list");
-				 filmList.add(film);
-			 }
+		
+			while(results.next()) 
+			{			
+			     int id = results.getInt("id");
+			     String title = results.getString("title");
+			     String description = results.getString("description");
+			     Integer year = results.getInt("release_year");
+			     int languageId = results.getInt("language_id");        
+			     int rentalDuration = results.getInt("rental_duration");     
+			     double rentalRate = results.getDouble("rental_rate"); 
+			     int length = results.getInt("length");
+			     double replacementCost = results.getDouble("replacement_cost");  
+			     String rating = results.getString("rating");
+			     String specialFeatures = results.getString("special_features");
+			     List<Actor> actorList = findActorsByFilmId(id);
+			     String language = getLanguageByFilmId(id);
+			     String category = getFilmCategoryByFilmId(id);
 			     
-		}  // end while loop creating filmList
+			     film = new Film(id, title, description, year, languageId, rentalDuration, rentalRate, 
+			    		 		length, replacementCost, rating, specialFeatures, actorList, language, category );
+			     
+			     filmList.add(film);
+			}  // end while loop for creating filmlist
+	
+			results.close();
+			stmt.close();
+			conn.close();
+		} 
+		catch (SQLException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
 	
 		//System.out.println("just before return film list for list of films to delete\n\n");
 		return filmList;
