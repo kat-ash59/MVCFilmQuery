@@ -9,11 +9,10 @@
 </head>
 <body>
 	<div class="container">
-	<h1>Get Information about Films</h1>
 		<div class="row">
 		<form action="findFilmById.do" >
 			<label for="id">Enter Id Here</label><br>
-			<input type="text" id="id" name="id">
+			<input type="text" id="id" name="id" value="0">
 			<input type="submit" name="doThis" value="Find film by Id">
 			<br>
 			<br>
@@ -30,7 +29,7 @@
 		</div>
 		<div class="row">
 		<form action="findFilmsByKeyword.do" >
-			<label for="keyword">Enter Keyword Here</label><br>
+			<label for="keyword">Enter Keyword Here: if nothing entered will return no films</label><br>
 			<input type="text" id="keyword" name="keyword">
 			<input type="submit" value="Find all films that have the keyword in title or description">
 			<br>
@@ -40,27 +39,27 @@
 		</div>
 		<div class="row">
 		<form action="createFilm.do" >
-			<pre>Please enter the title and description for the film you wish to enter into the database.</pre>
+			<h6>Please enter the title and description for the film you wish to enter into the database.</h6>
 			<label for="Title">Title</label><br>
-			<input type="text" id="Title" name="Title"/><br>
+			<input type="text" id="Title" name="Title" value=""/><br>
 			<label for="Description">Description</label><br>
-			<input type="text" id="Description" name="Description"/><br>
+			<input type="text" id="Description" name="Description" value=""/><br>
 			<input type="submit" value="Add new Film to the Database">
 			<br>
 			<br>
 			<br>
 		</form>
 		</div>
-		<!-- 
 		<div class="row">
 		<form action="deleteFilm.do" >
+			Please enter the id of the film you would like to delete<br>
+			<input type="text" name="id" id="id" value="0">
 			<input type="submit" value="Delete Film from the Database">
 			<br>
 			<br>
 			<br>
 		</form>
 		</div>
-		-->
 		<div class="row">
 		<form action="updateFilm.do">
 			<input type="button" name="somethingElse" value="Edit Film Title or Description">

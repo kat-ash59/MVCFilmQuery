@@ -85,12 +85,12 @@ public class Actor
 		this.numberOfActors = numberOfActors;
 	}
 	
-	public List getListOfAllActors()
+	public List<Actor> getListOfAllActors()
 	{
 		return this.listOfAllActors;
 	}
 	
-	public void setListOfAllActors(List listOfAllActors)
+	public void setListOfAllActors(List<Actor> listOfAllActors)
 	{
 		this.listOfAllActors = listOfAllActors;
 	}

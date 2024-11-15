@@ -11,7 +11,9 @@
 <%@  include file="bootstraphead.jsp" %>
 </head>
 <body>
+	<div class="container">
 	<h1>Film Information</h1>
+	<div class="row">
 	<c:choose>
 		<c:when test="${isSuccess }">
 			Successfully deleted the film!
@@ -20,10 +22,14 @@
 			Unable to delete the film!
 		</c:otherwise>
 	</c:choose>
-</body>	
-<head>
-
+	<form action="index.do">
+			<input type="submit" value="Back"/>
+	</form>
+	</div>
+	</div>
 	
+</body>
+<head>
 <%@  include file="bootstrapfooter.jsp" %>
 </body>
 </html>

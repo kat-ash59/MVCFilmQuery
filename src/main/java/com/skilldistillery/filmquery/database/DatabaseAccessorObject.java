@@ -45,77 +45,80 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 		System.out.println("title entered is " + title);
 		System.out.println("description is " + description);
 
-		try 
+		if ((title != null) && (!title.isEmpty()) || (!title.isBlank()))
 		{
-			conn = DriverManager.getConnection(URL, user, pass);
-			// start a transaction
-			conn.setAutoCommit(false);
-
-			// We'll be filling in the film's title, language_id - defaulting to 1, and description
-			String sql = "INSERT INTO film (title, language_id, description) VALUES (? ,? ,?)";
-			System.out.println("sql is " + sql);
-			
-			// compile / optimize the sql into the db, and request the generated keys be
-			// Accessible
-			PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-			// bind (assign) the name fields into our sql statements bind vars
-			stmt.setString(1, title);
-			stmt.setInt(2, 1); // not prompting user for language, using default of 1
-			stmt.setString(3, description);
-
-			// run the query in the database
-			int updateCount = stmt.executeUpdate();
-
-			// check if the INSERT was successful in creating 1 new Film
-			if (updateCount == 1) 
+			try 
 			{
-				// good news: we can grab this new Film's id
-				ResultSet keys = stmt.getGeneratedKeys();
-				System.out.println("keys = " + keys);
-
-				// we're expecting just 1 generated key since inserting one new film
-				if (keys.next()) 
-				{
-					// grab the generated key (id)
-					newFilmId = keys.getInt(1);
-
-					// change the initial id in our Java entity to film's 'real' id
-					
-				}
+				conn = DriverManager.getConnection(URL, user, pass);
+				// start a transaction
+				conn.setAutoCommit(false);
+	
+				// We'll be filling in the film's title, language_id - defaulting to 1, and description
+				String sql = "INSERT INTO film (title, language_id, description) VALUES (? ,? ,?)";
+				System.out.println("sql is " + sql);
 				
-				// an explicit commit of the transaction is required to prevent a rollback
-				conn.commit();
-
-			}
-			else 
-			{
-				// something went wrong with the INSERT
-				System.out.println("Something went wrong on the insert for your film");
-			}
-
-			film=findFilmById(newFilmId);
-			conn.close();
-
-		} // end try
-		catch (SQLException sqle) 
-		{
-			sqle.printStackTrace();
-			if (conn != null) 
-			{
-				try 
+				// compile / optimize the sql into the db, and request the generated keys be
+				// Accessible
+				PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+	
+				// bind (assign) the name fields into our sql statements bind vars
+				stmt.setString(1, title);
+				stmt.setInt(2, 1); // not prompting user for language, using default of 1
+				stmt.setString(3, description);
+	
+				// run the query in the database
+				int updateCount = stmt.executeUpdate();
+	
+				// check if the INSERT was successful in creating 1 new Film
+				if (updateCount == 1) 
 				{
-					conn.rollback();
-				} 
-				catch (SQLException sqle2) 
-				{
-					System.err.println("Error trying to rollback");
+					// good news: we can grab this new Film's id
+					ResultSet keys = stmt.getGeneratedKeys();
+					System.out.println("keys = " + keys);
+	
+					// we're expecting just 1 generated key since inserting one new film
+					if (keys.next()) 
+					{
+						// grab the generated key (id)
+						newFilmId = keys.getInt(1);
+	
+						// change the initial id in our Java entity to film's 'real' id
+						
+					}
+					
+					// an explicit commit of the transaction is required to prevent a rollback
+					conn.commit();
+	
 				}
-			} // end if
-			
-		} // end catch for sql exception
-		// ignoring connections exceptions for now
-
+				else 
+				{
+					// something went wrong with the INSERT
+					System.out.println("Something went wrong on the insert for your film");
+				}
+	
+				film=findFilmById(newFilmId);
+				conn.close();
+	
+			} // end try
+			catch (SQLException sqle) 
+			{
+				sqle.printStackTrace();
+				if (conn != null) 
+				{
+					try 
+					{
+						conn.rollback();
+					} 
+					catch (SQLException sqle2) 
+					{
+						System.err.println("Error trying to rollback");
+					}
+				} // end if
+				
+			} // end catch for sql exception
+			// ignoring connections exceptions for now
+		} // end if to ensure title is not null will return film = null if it is
+		
 		return film;
 	}	
 
@@ -126,42 +129,45 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 		
 		Connection conn = null;
 
-		//System.out.println("just inside delete film");
-		try 
+		if (filmId != 0)
 		{
-			conn = DriverManager.getConnection(URL, user, pass);
-			conn.setAutoCommit(false);
-
-			
-			// setup delete sql stmt
-			String sql = "DELETE FROM film WHERE id = ?";
-			
-			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, filmId);
-			
-			
-			stmt.executeUpdate();
-
-			conn.commit();
-			conn.close();
-		} 
-		catch (SQLException sqle) 
-		{
-			sqle.printStackTrace();
-			if (conn != null) 
+			try 
 			{
-				try 
+				conn = DriverManager.getConnection(URL, user, pass);
+				conn.setAutoCommit(false);
+	
+				
+				// setup delete sql stmt
+				String sql = "DELETE FROM film WHERE id = ?";
+				
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, filmId);
+				
+				
+				stmt.executeUpdate();
+	
+				conn.commit();
+				conn.close();
+			} 
+			catch (SQLException sqle) 
+			{
+				sqle.printStackTrace();
+				if (conn != null) 
 				{
-					conn.rollback();
-				} 
-				catch (SQLException sqle2) 
-				{
-					System.err.println("Error trying to rollback");
+					try 
+					{
+						conn.rollback();
+					} 
+					catch (SQLException sqle2) 
+					{
+						System.err.println("Error trying to rollback");
+					}
 				}
+				return false;
 			}
-			return false;
+			return true;
 		}
-		return true;	
+		return false;	
 	}	// end method deleteFilm
 
 	

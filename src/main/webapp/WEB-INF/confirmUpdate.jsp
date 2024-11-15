@@ -11,15 +11,26 @@
 <%@  include file="bootstraphead.jsp" %>
 </head>
 <body>
+	<div class="container">
 	<h1>Film Information</h1>
+	<div class="row">
 	<c:choose>
+		
 		<c:when test="${isSuccess }">
-			Updated the film!
+			<h5>You have successfully update your film in the Database</h5><br>
+			The film Id is: ${film.id}<br>
+			The New Title is: ${film.title}<br>
+			The New Description is: ${film.description}<br>
 		</c:when>
 		<c:otherwise>
 			Unable to update the film!
 		</c:otherwise>
 	</c:choose>
+	<form action="index.do">
+		<input type="submit" value="Back"/><br>
+	</form>
+	</div>
+	</div>
 </body>	
 <head>
 

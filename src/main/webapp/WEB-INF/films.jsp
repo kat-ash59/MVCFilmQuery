@@ -9,18 +9,18 @@
 <meta charset="UTF-8">
 <title>Film Information</title>
 <%@  include file="bootstraphead.jsp" %>
-
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
-
 </head>
 <body>
 	<h1>Film Information</h1>
-	
+	<div class="container">
+	<div class="row">
 		<form action="index.do">
 			<input type="submit" value="Back"/>
 		</form>
-		<c:if test="${! empty films }">
-			<table>
+		<c:choose>
+		<c:when test="${! empty films }">
+			<table class="table-bordered">
 			<tr>
 				<th>ID</th>
 				<th>Title</th>
@@ -34,13 +34,19 @@
 			</tr>
 			</c:forEach>	
 			</table>
-		</c:if>
+		</c:when>
+		<c:otherwise>
+			<h3>No such Film found!</h3>
+		</c:otherwise>
+	</c:choose>
 		<form action="index.do">
 			<input type="submit" value="Back"/>
 		</form>
-		
+	</div>
+	</div>
+</body>	
 
-	
+<head>
 <%@  include file="bootstrapfooter.jsp" %>
 </body>
 </html>
