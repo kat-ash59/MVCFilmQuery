@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -154,8 +155,9 @@ public class FilmController
 	}  // end search for film by keyword
 	
 	
-	@RequestMapping(path="updateFilm.do", method=RequestMethod.GET, params="id")
-	public ModelAndView updateFilm(@RequestParam("id") int filmId)
+	@PostMapping(path="updateFilm.do", params={"id", "title","description"})
+	public ModelAndView updateFilm(@RequestParam("id") int filmbug
+									)
 	{
 		Film film = null;
 		ModelAndView mv = new ModelAndView();

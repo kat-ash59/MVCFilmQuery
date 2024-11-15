@@ -312,7 +312,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 	public Film findFilmAndActorsByFilmId(int filmId)
 	{
 		Film tmpFilm = null;
-		List<Actor> listOfActors = new ArrayList<Actor>();
+		List<Actor> listOfActors = new ArrayList<>();
 		tmpFilm = findFilmById(filmId);
 		
 		if (tmpFilm == null)
