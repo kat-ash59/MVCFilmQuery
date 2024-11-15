@@ -35,6 +35,9 @@
 			</c:forEach>	
 			</table>
 		</c:if>
+		<form action="index.do">
+			<input type="submit" value="Back"/>
+		</form>
 		
 
 	

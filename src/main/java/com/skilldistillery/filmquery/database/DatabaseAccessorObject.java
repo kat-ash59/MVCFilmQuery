@@ -40,6 +40,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 	{
 		// each method manages its own connection
 		Connection conn = null;
+		Film film = null;
 		int newFilmId = 0;
 		System.out.println("title entered is " + title);
 		System.out.println("description is " + description);
@@ -82,7 +83,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 					// change the initial id in our Java entity to film's 'real' id
 					
 				}
-
+				
 				// an explicit commit of the transaction is required to prevent a rollback
 				conn.commit();
 
@@ -91,9 +92,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 			{
 				// something went wrong with the INSERT
 				System.out.println("Something went wrong on the insert for your film");
-				film = null;
 			}
 
+			film=findFilmById(newFilmId);
 			conn.close();
 
 		} // end try
@@ -120,7 +121,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 
 	
 	@Override
-	public boolean deleteFilm(Film film) 
+	public boolean deleteFilm(int filmId) 
 	{
 		
 		Connection conn = null;
@@ -136,7 +137,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 			String sql = "DELETE FROM film WHERE id = ?";
 			
 			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, film.getId());
+			stmt.setInt(1, filmId);
 			
 			
 			stmt.executeUpdate();
@@ -163,6 +164,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 		return true;	
 	}	// end method deleteFilm
 
+	
 	@Override
 	public boolean updateFilm(Film film) 
 	{
@@ -212,6 +214,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 		return true;
 	}
 
+	
+	
 	@Override
 	public List<Film> getListOfAllFilms()
 	{
@@ -265,6 +269,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 		return filmList;
 		
 	} // end getListOfAllFilms
+	
 	
 	@Override
 	public int getMaxIdFromFilmTable() 
@@ -397,8 +402,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 	public List<Film> findFilmsByKeyword(String keyword) 
 	{
 
-		List<Film> filmList = new ArrayList<Film>();
-		List<Actor> actorList = new ArrayList<Actor>();
+		List<Film> filmList = new ArrayList<>();
+		List<Actor> actorList = new ArrayList<>();
 		
 		try 
 		{
@@ -441,7 +446,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 		} 
 		catch (SQLException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

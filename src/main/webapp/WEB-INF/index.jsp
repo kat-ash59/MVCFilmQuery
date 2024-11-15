@@ -9,7 +9,6 @@
 </head>
 <body>
 	<div class="container">
-	<div class="row">
 	<h1>Get Information about Films</h1>
 		<div class="row">
 		<form action="findFilmById.do" >
@@ -52,13 +51,26 @@
 			<br>
 		</form>
 		</div>
+		<!-- 
+		<div class="row">
+		<form action="deleteFilm.do" >
+			<input type="submit" value="Delete Film from the Database">
+			<br>
+			<br>
+			<br>
+		</form>
+		</div>
+		-->
 		<div class="row">
 		<form action="updateFilm.do">
 			<input type="button" name="somethingElse" value="Edit Film Title or Description">
 		</form>
 		</div>
 	<br>
+	</div>
 </body>
+
+<!-- 
 <body>
 	<h1>Get Information about Actors</h1>
 	<br>
@@ -68,4 +80,5 @@
 	</form>
 <%@  include file="bootstrapfooter.jsp" %>
 </body>
+ -->
 </html>

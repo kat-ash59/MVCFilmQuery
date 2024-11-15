@@ -13,21 +13,14 @@
 <body>
 	<h1>Film Information</h1>
 	<c:choose>
-		<c:when test="${! empty film }">
-			Title: ${film.title}<br>
-			Id: ${film.id}<br>
-			Description: ${film.description}<br>
-			<form action="deleteFilm.do">
-				<input type="hidden" id="id" name="id" value="${film.id}" /><br>
-				<input type="submit" value="Delete"/>
-			</form>
+		<c:when test="${isSuccess }">
+			Successfully deleted the film!
 		</c:when>
 		<c:otherwise>
-				<h3>No such Film found!</h3>
+			Unable to delete the film!
 		</c:otherwise>
 	</c:choose>
 </body>	
-
 <head>
 
 	

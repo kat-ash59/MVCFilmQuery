@@ -29,7 +29,7 @@ public interface DatabaseAccessor
 
 	public Film createFilm(String title, String description);
 
-	public boolean deleteFilm(Film film);
+	public boolean deleteFilm(int filmId);
 
 	public List<Film> getListOfAllFilms();
 

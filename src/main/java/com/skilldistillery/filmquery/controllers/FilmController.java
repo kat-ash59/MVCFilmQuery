@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,11 +30,11 @@ public class FilmController
 	public ModelAndView home()
 	{
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("WEB-INF/index.jsp");
+		mv.setViewName("index");
 		return mv;
 	}
 	
-	@RequestMapping(path="findFilmById.do", method=RequestMethod.GET, params="id")
+	@GetMapping(path="findFilmById.do", params="id")
 	public ModelAndView findFilmAndActorsByFilmId(@RequestParam("id") int filmId)
 	{
 		Film film = null;
@@ -43,7 +44,7 @@ public class FilmController
 		{
 			film = dao.findFilmAndActorsByFilmId(filmId);
 			mv.addObject("film", film);
-			mv.setViewName("WEB-INF/film.jsp");
+			mv.setViewName("film");
 		}
 		catch (Exception e)
 		{
@@ -55,7 +56,7 @@ public class FilmController
 	
 
 	
-	@RequestMapping(path="findAllFilms.do", method=RequestMethod.GET)
+	@GetMapping(path="findAllFilms.do")
 	public ModelAndView findAllFilmsInDB()
 	{
 		List<Film> filmList = new ArrayList<Film>();
@@ -65,7 +66,7 @@ public class FilmController
 		{
 			filmList = dao.getListOfAllFilms();
 			mv.addObject("films", filmList);
-			mv.setViewName("WEB-INF/films.jsp");
+			mv.setViewName("films");
 		}
 		catch (Exception e)
 		{
@@ -77,7 +78,7 @@ public class FilmController
 	}  // end search for get list of all films
 	
 
-	@RequestMapping(path="findFilmsByKeyword.do", method=RequestMethod.GET, params="keyword")
+	@GetMapping(path="findFilmsByKeyword.do", params="keyword")
 	public ModelAndView findFilmsByKeyword(@RequestParam("keyword") String keyword)
 	{
 		List<Film> filmList = new ArrayList<Film>();
@@ -87,7 +88,7 @@ public class FilmController
 		{
 			filmList = dao.findFilmsByKeyword(keyword);
 			mv.addObject("films", filmList);
-			mv.setViewName("WEB-INF/films.jsp");
+			mv.setViewName("films");
 		}
 		catch (Exception e)
 		{
@@ -99,8 +100,9 @@ public class FilmController
 	}  // end search for film by keyword
 	
 	
-	@RequestMapping(path="createFilm.do", method=RequestMethod.GET, params={"Title","Description"})
-	public ModelAndView createFilm(@RequestParam("Title") String Title, @RequestParam("Description") String Description)
+	@GetMapping(path="createFilm.do", params={"Title","Description"})
+	public ModelAndView createFilm(@RequestParam("Title") String Title, 
+									@RequestParam("Description") String Description)
 	{
 		Film film = null;
 		ModelAndView mv = new ModelAndView();
@@ -109,7 +111,38 @@ public class FilmController
 		{
 			film = dao.createFilm(Title, Description);
 			mv.addObject("film", film);
-			mv.setViewName("WEB-INF/film.jsp");
+			mv.setViewName("film");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			
+		}
+		
+		return mv;
+	}  // end search for film by keyword
+
+	
+	@GetMapping(path="deleteFilm.do", params="id")
+	public ModelAndView deleteFilm(@RequestParam("id") int filmId)
+	{
+		Boolean successfulDelete = false;
+		ModelAndView mv = new ModelAndView();
+		System.out.println("film id = " + filmId);
+		
+		try
+		{
+			successfulDelete = dao.deleteFilm(filmId);
+			if (successfulDelete)
+			{
+				mv.addObject("isSuccess", successfulDelete);
+				mv.setViewName("confirmDelete");
+			}
+			else
+			{
+				mv.addObject("isSuccess", false);
+				mv.setViewName("confirmDelete");
+			}
 		}
 		catch (Exception e)
 		{
@@ -131,7 +164,7 @@ public class FilmController
 		{
 			film = dao.findFilmById(filmId);
 			mv.addObject("film", film);
-			mv.setViewName("WEB-INF/film.jsp");
+			mv.setViewName("film");
 		}
 		catch (Exception e)
 		{
@@ -153,7 +186,7 @@ public class FilmController
 		{
 			actor = dao.findActorByActorId(actorId);
 			mv.addObject("actor", actor);
-			mv.setViewName("WEB-INF/film.jsp");
+			mv.setViewName("film");
 		}
 		catch (Exception e)
 		{
