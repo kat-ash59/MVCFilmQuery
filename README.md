@@ -47,3 +47,24 @@ A user can search for films by keyword/pattern in title or description. From the
 completed 11/15/24
 
 When a film's details are displayed, its actors and categories are also listed.
+
+### Stretch Goals
+
+### Stretch Goal #1
+completed 11/15/24
+
+A user can add an Actor to the database.
+
+### Stretch Goal #2
+A user can update or delete an actor.
+
+### Stretch Goal #3
+A user can add an actor to a film.
+
+### Stretch Goal #4
+A user can remove an actor from a film.
+
+### Stretch Goal #5
+Gussy up your JSPs using Bootstrap.
+
+

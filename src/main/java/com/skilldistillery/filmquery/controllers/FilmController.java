@@ -178,7 +178,7 @@ public class FilmController
 			mv.setViewName("film");
 		}
 		return mv;
-	}  // end search for film by keyword
+	}  // end add film to database
 
 	
 	@GetMapping(path="deleteFilm.do", params="id")
@@ -289,19 +289,17 @@ public class FilmController
 	}  // end get info for edit film by id
 
 
-	
-	
-	@RequestMapping(path="findActorById.do", method=RequestMethod.GET, params="id")
-	public ModelAndView findActorById(@RequestParam("id") int actorId)
+	@GetMapping(path="findAllActors.do")
+	public ModelAndView findAllActorsInDB()
 	{
-		Actor actor = null;
+		List<Actor> actorList = new ArrayList<Actor>();
 		ModelAndView mv = new ModelAndView();
 		
 		try
 		{
-			actor = dao.findActorByActorId(actorId);
-			mv.addObject("actor", actor);
-			mv.setViewName("film");
+			actorList = dao.getListOfAllActors();
+			mv.addObject("actors", actorList);
+			mv.setViewName("actors");
 		}
 		catch (Exception e)
 		{
@@ -310,7 +308,65 @@ public class FilmController
 		}
 		
 		return mv;
+	}  // end search for get list of all films
+	
+
+	
+	@RequestMapping(path="findActorById.do", method=RequestMethod.GET, params="id")
+	public ModelAndView findActorById(@RequestParam("id") int actorId)
+	{
+		Actor actor = null;
+		ModelAndView mv = new ModelAndView();
+		
+		if (actorId !=0 )
+		{
+			try
+			{
+				actor = dao.findActorByActorId(actorId);
+				mv.addObject("actor", actor);
+				mv.setViewName("actor");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				
+			}
+		}
+		
+		return mv;
 	}  // end find actor by actor id
+	
+	@GetMapping(path="addActor.do", params={"firstName","lastName"})
+	public ModelAndView createActor(@RequestParam("firstName") String firstName, 
+									@RequestParam("lastName") String lastName)
+	{
+		Actor actor = new Actor();
+		ModelAndView mv = new ModelAndView();
+		
+		
+		if ((firstName != null) && (!firstName.isEmpty()) && (!firstName.isBlank()) &&
+			(lastName != null) && (!lastName.isEmpty()) && (!lastName.isBlank()))
+		{
+			try
+			{
+				actor = dao.createActor(firstName, lastName);
+				mv.addObject("actor", actor);
+				mv.setViewName("actor");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				
+			}
+		}
+		else
+		{
+			mv.addObject("actor", actor);
+			mv.setViewName("actor");
+		}
+		return mv;
+	}  // end actor to database
+
 	
 
 }

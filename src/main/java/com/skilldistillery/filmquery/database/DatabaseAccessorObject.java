@@ -42,8 +42,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 		Connection conn = null;
 		Film film = null;
 		int newFilmId = 0;
-		System.out.println("title entered is " + title);
-		System.out.println("description is " + description);
 
 		if ((title != null) && (!title.isEmpty()) || (!title.isBlank()))
 		{
@@ -74,7 +72,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 				{
 					// good news: we can grab this new Film's id
 					ResultSet keys = stmt.getGeneratedKeys();
-					System.out.println("keys = " + keys);
 	
 					// we're expecting just 1 generated key since inserting one new film
 					if (keys.next()) 
@@ -119,7 +116,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 				
 			} // end catch for sql exception
 			// ignoring connections exceptions for now
-		} // end if to ensure title is not null will return film = null if it is
+		} // end if to make sure title isn't blank
 		
 		return film;
 	}	
@@ -280,8 +277,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 		return filmList;
 		
 	} // end getListOfAllFilms
-	
-	
+		
 
 	@Override
 	public Film findFilmAndActorsByFilmId(int filmId)
@@ -466,92 +462,132 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 		return category;
 	}  // end method getFilmCategoryByFilmId
 
-	
-	// needs to be finished at later time kaa 11/2/24
-	public Actor createActor(Actor actor) 
+
+	@Override
+	public List<Actor> getListOfAllActors()
 	{
-		  // each method manages its own connection
-		  Connection conn = null;
-
-		  try {
-		    conn = DriverManager.getConnection(URL, user, pass);
-		    // start a transaction
-		    conn.setAutoCommit(false); 
-
-		    // We'll be filling in the actor's first and last names
-		    String sql = "INSERT INTO actor (first_name, last_name) VALUES (?,?)";
-
-		    // compile / optimize the sql into the db, and request the generated keys be accessable
-		    PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-		    // bind (assign) the name fields into our sql statements bind vars
-		    stmt.setString(1, actor.getFirstName());
-		    stmt.setString(2, actor.getLastName());
-
-		    // run the query in the database
-		    int updateCount = stmt.executeUpdate();
-
-		    // check if the INSERT was successful in creating 1 new Actor
-		    if (updateCount == 1) {
-		      // good news: we can grab this new Actor's id 
-		      ResultSet keys = stmt.getGeneratedKeys();
-
-		      // we're expecting just 1 generated key
-		      if (keys.next()) {
-		        // grab the generated key (id)
-		        int newActorId = keys.getInt(1);
-
-		        // change the initial id in our Java entity to actor's 'real' id 
-		        actor.setId(newActorId);
-
-		        // see if this new actor has been in previous films
-		        if (actor.getFilms() != null && actor.getFilms().length > 0) 
-		        {
-			          sql = "INSERT INTO film_actor (film_id, actor_id) VALUES (?,?)";
-			          stmt = conn.prepareStatement(sql);
+		List<Actor> actorList = new ArrayList<>();
+		Actor actor = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(URL, user, pass);
+			String sqltext = "select * from actor";
+			PreparedStatement stmt = conn.prepareStatement(sqltext);
+			
+			ResultSet results = stmt.executeQuery();
+		
+		
+			while(results.next()) 
+			{			
+			     int id = results.getInt("id");
+			     String firstName = results.getString("first_name");
+			     String lastName = results.getString("last_name");
+			         
+			     actor = new Actor(id, firstName, lastName );
+			     
+			     actorList.add(actor);
+			}  // end while loop for creating actorList
 	
-			          // associate each film they were in with their new Actor id 
-			          for (Film film : actor.getFilms()) 
-			          {
-				            stmt.setInt(1, film.getId());
-				            stmt.setInt(2, newActorId);
-				            updateCount = stmt.executeUpdate();
-			          }
-		        }
+			results.close();
+			stmt.close();
+			conn.close();
+		} 
+		catch (SQLException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+		return actorList;
+		
+	} // end getListOfAllActors
+	
 
-		      }
+	@Override
+	public Actor createActor(String firstName, String lastName) 
+	{
+		// each method manages its own connection
+		Connection conn = null;
+		Actor actor = null;
+		int newActorId = 0;
 
-		      // an explicit commit of the transaction is required to prevent a rollback
-		      conn.commit(); 
-
-		    } 
-		    else 
-		    {
-		      // something went wrong with the INSERT
-		      actor = null;
-		    }
-		    
-		    conn.close();
-
-		  } 
-		  catch (SQLException sqle) 
-		  {
-		    sqle.printStackTrace();
-		    if (conn != null) 
-		    {
-		      try 
-		      { 
-		    	  conn.rollback(); 
-		      }
-		      catch (SQLException sqle2) 
-		      {
-		    	  System.err.println("Error trying to rollback");
-		      }
-		    }
-		    throw new RuntimeException("Error inserting actor " + actor);
-		  }
-
-		  return actor;
+		if ((firstName != null) && (!firstName.isEmpty()) || (!firstName.isBlank()) &&
+		(lastName != null) && (!lastName.isEmpty()) || (lastName.isBlank()))
+		{
+		
+			try 
+			{
+				conn = DriverManager.getConnection(URL, user, pass);
+				// start a transaction
+				conn.setAutoCommit(false);
+	
+				
+				String sql = "INSERT INTO actor (first_name, last_name) VALUES (? , ?)";
+				System.out.println("sql is " + sql);
+				
+				// compile / optimize the sql into the db, and request the generated keys be
+				// Accessible
+				PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+	
+				// bind (assign) the name fields into our sql statements bind vars
+				stmt.setString(1, firstName);
+				stmt.setString(2, lastName);
+	
+				// run the query in the database
+				int updateCount = stmt.executeUpdate();
+	
+				// check if the INSERT was successful in creating 1 new Film
+				if (updateCount == 1) 
+				{
+					// good news: we can grab this new Film's id
+					ResultSet keys = stmt.getGeneratedKeys();
+	
+					// we're expecting just 1 generated key since inserting one new film
+					if (keys.next()) 
+					{
+						// grab the generated key (id)
+						newActorId = keys.getInt(1);
+	
+						// change the initial id in our Java entity to film's 'real' id
+						
+					}
+					
+					// an explicit commit of the transaction is required to prevent a rollback
+					conn.commit();
+					stmt.close();
+					keys.close();
+					conn.close();
+				}
+				else 
+				{
+					// something went wrong with the INSERT
+					System.out.println("Something went wrong on the insert for your Actor");
+				}
+	
+				actor = findActorByActorId(newActorId);
+				
+	
+			} // end try
+			catch (SQLException sqle) 
+			{
+				sqle.printStackTrace();
+				if (conn != null) 
+				{
+					try 
+					{
+						conn.rollback();
+					} 
+					catch (SQLException sqle2) 
+					{
+						System.err.println("Error trying to rollback");
+					}
+				} // end if
+				
+			} // end catch for sql exception
+		} // end if checking first name and last name values
+		
+		return actor;
 	}  // end method create actor
 	
 	
@@ -766,7 +802,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 			{
 			     language = results.getString("language.name");  
 			}
-	
 			
 			results.close();
 			stmt.close();
@@ -778,82 +813,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 			e.printStackTrace();
 		}
 		
-		return language;
-
-		
+		return language;		
 	}
-
-	@Override
-	public int countNumberOfAllActors()
-	{
-
-		int numberOfActors = 0;
-		
-		try 
-		{
-			conn = DriverManager.getConnection(URL, user, pass);
-			String sqltext = "select * from actor";
-			PreparedStatement stmt = conn.prepareStatement(sqltext);
-			
-			ResultSet results = stmt.executeQuery();
-			
-			
-			
-			while(results.next()) 
-			{
-			     numberOfActors++;
-			}
-	
-			results.close();
-			stmt.close();
-			conn.close();
-		} 
-		catch (SQLException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		actor.setNumberOfActors(numberOfActors);
-		return numberOfActors;
-		
-	} // end method countNumberOfActors
-
-	@Override
-	public int countNumberOfAllFilms()
-	{
-
-		int numberOfFilms = 0;
-
-		try 
-		{
-			conn = DriverManager.getConnection(URL, user, pass);
-			String sqltext = "select * from film";
-			PreparedStatement stmt = conn.prepareStatement(sqltext);
-			
-			ResultSet results = stmt.executeQuery();
-
-			
-			while(results.next()) 
-			{
-			     numberOfFilms++;
-			}
-	
-			// System.out.println("\nThe number of films are " + numberOfFilms);
-
-			results.close();
-			stmt.close();
-			conn.close();
-		} 
-		catch (SQLException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return numberOfFilms;
-	} // end method countNumberOfFilms
-
 
 
 }  // end class DatabaseAccessorObject

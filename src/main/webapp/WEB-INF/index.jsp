@@ -8,19 +8,19 @@
 <%@  include file="bootstraphead.jsp" %>
 </head>
 <body>
-	<h1>MVC Film Query Application</h1>
+	<h1 style="text-align: center">MVC Film Query Application</h1>
 	<br>
+	<h3>Get Information about Films in the Database</h3>
 	<div class="container">
 		<div class="row">
 		<strong>Find all the films in the database:</strong><br>
 		<form action="findAllFilms.do" >
-			<br>
 			<input type="submit" value="Find all films in database">
-			<br>
-			<br>
 			<br>
 		</form>
 		</div>
+		<br>
+		<br>
 		<div class="row">
 		<strong>Find a film by it's film id:</strong><br>
 		<form action="findFilmById.do" >
@@ -61,38 +61,47 @@
 			<br>
 		</form>
 		</div>
-		<div class="row">
-		
-<!-- 
-		<form action="deleteFilm.do" >
-			Please enter the id of the film you would like to delete<br>
-			<input type="text" name="id" id="id" value="0">
-			<input type="submit" value="Delete Film from the Database">
-			<br>
-			<br>
-			<br>
-		</form>
-		</div>
-
-		<div class="row">
-		<form action="updateFilm.do">
-			<input type="button" name="somethingElse" value="Edit Film Title or Description">
-		</form>
- -->
-		</div>
-	<br>
+		<br>
 	</div>
-</body>
 
-<!-- 
-<body>
-	<h1>Get Information about Actors</h1>
+	<h3>Get Information about Actors in the Database</h3>
 	<br>
-	<form action="findActorById.do" >
-		<input type="text" name="id">
-		<input type="submit" name="doThat" value="Find actor by Id">
-	</form>
+	<div class="container">
+		<div class="row">
+			<strong>Find all the actors in the database</strong>
+			<form action="findAllActors.do" >
+				<input type="submit" name="doThat" value="Find  all actors in database">
+			</form>
+		</div>
+		<br>
+		<div class="row">
+		<strong>You will be asked to enter the First and Last Name 
+		for the actor you wish to enter into the database.</strong><br>
+		<form action="addActor.do" >
+			<br>
+			<label for="firstName">Enter First Name Here:</label><br>
+			<input type="text" id="firstName" name="firstName" value=""/>
+			<br>
+			<label for="lastName">Enter Last Name Here:</label><br>
+			<input type="text" id="lastName" name="lastName" value=""/>
+			<br>
+			<input type="submit" value="Add new Actor to the Database">
+			<br>
+			<br>
+			<br>
+		</form>
+		</div>
+		<br>
+		<div class="row">
+			<strong>Find actors by their Id</strong>
+			<form action="findActorById.do" >
+				<input type="text" name="id" value="0">
+				<input type="submit" name="doThat" value="Find actor by Id">
+			</form>
+		</div>
+		<br>
+		<br>
+	</div>
 <%@  include file="bootstrapfooter.jsp" %>
 </body>
- -->
 </html>
