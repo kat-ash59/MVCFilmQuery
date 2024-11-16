@@ -30,7 +30,7 @@
 			</form>
 			</c:when>
 		<c:otherwise>
-				<h3>No such Film found to update!</h3>
+				<h6>No such Film found to update!</h6>
 		</c:otherwise>
 	</c:choose>
 	</div>

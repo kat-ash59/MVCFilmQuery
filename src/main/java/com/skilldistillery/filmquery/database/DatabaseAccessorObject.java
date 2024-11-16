@@ -700,7 +700,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 	@Override
 	public Actor findActorByActorId(int actorId) 
 	{
-
+		System.out.println("actorId" + actorId);
 		try 
 		{
 			conn = DriverManager.getConnection(URL, user, pass);
@@ -781,6 +781,58 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 	
 
 	@Override
+	public boolean updateActor(Actor actor) 
+	{
+		Connection conn = null;
+		
+		try 
+		{
+			conn = DriverManager.getConnection(URL, user, pass);
+			// start the transaction
+			conn.setAutoCommit(false);
+
+			String sql = "UPDATE actor SET first_name=?, last_name=?  WHERE id=?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+
+			stmt.setString(1, actor.getFirstName());
+			stmt.setString(2, actor.getLastName());
+			stmt.setInt(3, actor.getId());
+
+			stmt.executeUpdate();
+			
+			// all data associated with the actor has been updated, so
+			// let's commit now
+			conn.commit();
+			stmt.close();
+			conn.close();
+			
+		} 
+		catch (SQLException sqle) 
+		{
+			// something went wrong, so the above commit() was never called
+			// let's undo what we did
+			sqle.printStackTrace();
+			if (conn != null) 
+			{
+				try 
+				{
+					conn.rollback();
+					conn.close();
+				} 
+				catch (SQLException sqle2) 
+				{
+					System.err.println("Error trying to rollback");
+				}
+			}
+			// not successful in the update
+			return false;
+		}
+		// we rocked the update!
+		return true;
+	}  // end method update actor
+
+
+	@Override
 	public String getLanguageByFilmId(int filmId)
 	{
 		String language = null;
@@ -815,6 +867,57 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 		
 		return language;		
 	}
+
+	
+	
+	@Override
+	public boolean deleteActor(int actorId) 
+	{
+		
+		Connection conn = null;
+
+		if (actorId != 0)
+		{
+			try 
+			{
+				conn = DriverManager.getConnection(URL, user, pass);
+				conn.setAutoCommit(false);
+	
+				
+				// setup delete sql stmt
+				String sql = "DELETE FROM actor WHERE id = ?";
+				
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, actorId);
+				
+				
+				stmt.executeUpdate();
+	
+				conn.commit();
+				stmt.close();
+				conn.close();
+			} 
+			catch (SQLException sqle) 
+			{
+				sqle.printStackTrace();
+				if (conn != null) 
+				{
+					try 
+					{
+						conn.rollback();
+					} 
+					catch (SQLException sqle2) 
+					{
+						System.err.println("Error trying to rollback");
+					}
+				}
+				return false;
+			}
+			return true;
+		}
+		return false;	
+	}	// end method deleteActor
+
 
 
 }  // end class DatabaseAccessorObject

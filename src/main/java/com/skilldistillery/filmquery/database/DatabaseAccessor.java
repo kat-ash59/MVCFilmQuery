@@ -32,6 +32,10 @@ public interface DatabaseAccessor
 	public Actor findActorByActorId(int actorId);
 
 	public Actor createActor(String firstName, String lastName);
+
+	public boolean updateActor(Actor actor);
+
+	public boolean deleteActor(int actorId);
 	
 
 	

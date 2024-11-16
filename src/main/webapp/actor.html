@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Actor Information</title>
+</head>
+<body>
+	<h3>Get Information about Actors in the Database</h3>
+	<form action="index.do">
+		<input type="submit" value="Back"/><br>
+	</form>
+	<br>
+	<div class="container">
+		<div class="row">
+			<strong>Find all the actors in the database</strong>
+			<form action="findAllActors.do" >
+				<input type="submit" name="doThat" value="Find  all actors in database">
+			</form>
+		</div>
+		<br>
+		<br>
+		<br>
+		<div class="row">
+		<strong>You will be asked to enter the First and Last Name 
+		for the actor you wish to enter into the database.</strong><br>
+		<form action="addActor.do" >
+			<br>
+			<label for="firstName">Enter First Name Here:</label><br>
+			<input type="text" id="firstName" name="firstName" value=""/>
+			<br>
+			<label for="lastName">Enter Last Name Here:</label><br>
+			<input type="text" id="lastName" name="lastName" value=""/>
+			<br>
+			<input type="submit" value="Add new Actor to the Database">
+			<br>
+			<br>
+			<br>
+		</form>
+		</div>
+		<br>
+		<br>
+		<br>
+		<div class="row">
+			<strong>Find actors by their Id</strong>
+			<form action="findActorById.do" >
+				<input type="text" name="id" value="0">
+				<input type="submit" name="doThat" value="Find actor by Id">
+			</form>
+		</div>
+		<br>
+		<br>
+	</div>
+	<form action="index.do">
+		<input type="submit" value="Back"/><br>
+	</form>
+</body>
+</html>

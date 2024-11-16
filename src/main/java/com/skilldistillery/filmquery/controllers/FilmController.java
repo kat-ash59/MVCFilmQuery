@@ -194,12 +194,12 @@ public class FilmController
 				if (successfulDelete)
 				{
 					mv.addObject("isSuccess", successfulDelete);
-					mv.setViewName("confirmDelete");
+					mv.setViewName("confirmFilmDelete");
 				}
 				else
 				{
 					mv.addObject("isSuccess", false);
-					mv.setViewName("confirmDelete");
+					mv.setViewName("confirmFilmDelete");
 				}
 			}
 			catch (Exception e)
@@ -209,7 +209,7 @@ public class FilmController
 			}
 		
 		return mv;
-	}  // end search for film by keyword
+	}  // end delete film
 	
 	
 	@GetMapping(path="updateFilm.do", params={"id","title","description"})
@@ -221,7 +221,6 @@ public class FilmController
 		ModelAndView mv = new ModelAndView();
 		Boolean successfulUpdate = false;
 		
-		System.out.println("id = " + filmId + " title = " + title + " description = " + description);
 		
 		try
 		{
@@ -241,12 +240,12 @@ public class FilmController
 			{
 				mv.addObject("isSuccess", successfulUpdate);
 				mv.addObject("film", film);
-				mv.setViewName("confirmUpdate");
+				mv.setViewName("confirmFilmUpdate");
 			}
 			else
 			{
 				mv.addObject("isSuccess", false);
-				mv.setViewName("confirmUpdate");
+				mv.setViewName("confirmFilmUpdate");
 			}
 			
 		}
@@ -260,8 +259,8 @@ public class FilmController
 	}  // end edit film id
 
 
-	@GetMapping(path="updateGetInfo.do", params="id")
-	public ModelAndView updateGetFilmInfo(@RequestParam("id") int filmId)
+	@GetMapping(path="updateFilmGetInfo.do", params="id")
+	public ModelAndView updateFilmGetInfo(@RequestParam("id") int filmId)
 	{
 		Film film = null;
 		ModelAndView mv = new ModelAndView();
@@ -367,6 +366,123 @@ public class FilmController
 		return mv;
 	}  // end actor to database
 
+	@GetMapping(path="updateActor.do", params={"id","firstName","lastName"})
+	public ModelAndView updateActor( @RequestParam("id") int actorId,
+									@RequestParam("firstName") String firstName,
+									@RequestParam("lastName") String lastName)
+	{
+		Actor actor = null;
+		ModelAndView mv = new ModelAndView();
+		Boolean successfulUpdate = false;
+		
+		
+		try
+		{
+			if (actorId != 0)
+			{
+				actor = dao.findActorByActorId(actorId);
+				
+			}
+			System.out.println("inside update actor get actor name before set first name " + actor.getFirstName());
+			if ((firstName != null) && (!firstName.isEmpty()) || (!firstName.isBlank()))
+			{
+				actor.setFirstName(firstName);
+			}
+			System.out.println("inside update actor get actor name after set first name " + actor.getFirstName());
+			
+			if ((lastName != null) && (!lastName.isEmpty()) || (!lastName.isBlank()))
+			{
+				actor.setLastName(lastName);
+			}
+			System.out.println("inside update actor get actor name after set first name " + actor.getFirstName());
+		
+			successfulUpdate = dao.updateActor(actor);
+			
+			System.out.println("successfulUpdate = " + successfulUpdate);
+			
+			if (successfulUpdate)
+			{
+				mv.addObject("isSuccess", successfulUpdate);
+				mv.addObject("actor", actor);
+				mv.setViewName("confirmActorUpdate");
+			}
+			else
+			{
+				mv.addObject("isSuccess", false);
+				mv.setViewName("confirmActorUpdate");
+			}
+			
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			
+		}
+		
+		return mv;
+	}  // end update actor
+
+
+	@GetMapping(path="updateActorGetInfo.do", params="id")
+	public ModelAndView updateActorGetInfo(@RequestParam("id") int actorId)
+	{
+		Actor actor = null;
+		ModelAndView mv = new ModelAndView();
+		
+		if (actorId != 0)
+		{
+			try
+			{
+				actor = dao.findActorByActorId(actorId);
+				mv.addObject("actor", actor);
+				mv.setViewName("updateActor");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				
+			}
+		}
+		else
+		{
+			mv.addObject("actor", actor);
+			mv.setViewName("updateActor");
+		}
+		return mv;
+	}  // end get info for edit film by id
 	
+	
+	
+	@GetMapping(path="deleteActor.do", params="id")
+	public ModelAndView deleteActor(@RequestParam("id") int actorId)
+	{
+		Boolean successfulDelete = false;
+		ModelAndView mv = new ModelAndView();
+		
+		
+			try
+			{
+				successfulDelete = dao.deleteActor(actorId);
+				if (successfulDelete)
+				{
+					mv.addObject("isSuccess", successfulDelete);
+					mv.setViewName("confirmFilmDelete");
+				}
+				else
+				{
+					mv.addObject("isSuccess", false);
+					mv.setViewName("confirmFilmDelete");
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				
+			}
+		
+		return mv;
+	}  // end delete actor
+
+
 
 }

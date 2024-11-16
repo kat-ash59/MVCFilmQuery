@@ -31,7 +31,7 @@
 				</div>
 				<br>
 				<div class="inner">
-				<form action="updateGetInfo.do">
+				<form action="updateFilmGetInfo.do">
 					<input type="hidden" id="id" name="id" value="${film.id}" />
 					<input type="submit" value="Update"/><br>
 				</form>

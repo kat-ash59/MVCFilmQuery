@@ -56,6 +56,8 @@ completed 11/15/24
 A user can add an Actor to the database.
 
 ### Stretch Goal #2
+completed 11/16/24
+
 A user can update or delete an actor.
 
 ### Stretch Goal #3
@@ -67,4 +69,7 @@ A user can remove an actor from a film.
 ### Stretch Goal #5
 Gussy up your JSPs using Bootstrap.
 
+
+### My personal stretch goal #6
+Find an actor with a keyword that matches part of the First Name and Last Name
 
