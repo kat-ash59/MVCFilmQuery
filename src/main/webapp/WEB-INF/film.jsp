@@ -15,21 +15,36 @@
 <body>
 	<div class="container">
 	<div class="row">
+	<h3>Film Information</h3>
 	<c:choose>
 		<c:when test="${! empty film }">
 			Title: ${film.title}<br>
 			Id: ${film.id}<br>
 			Description: ${film.description}
 			<br>
-			<form action="deleteFilm.do">
-				<input type="hidden" id="id" name="id" value="${film.id}" /><br>
-				<input type="submit" value="Delete"/>
-			</form>
-			<br>
-			<form action="updateGetInfo.do">
-				<input type="hidden" id="id" name="id" value="${film.id}" /><br>
-				<input type="submit" value="Update"/><br>
-			</form>
+			<div id="outer">
+				<div class="inner">
+				<form action="deleteFilm.do">
+					<input type="hidden" id="id" name="id" value="${film.id}" />
+					<input type="submit" value="Delete"/>
+				</form>
+				</div>
+				<br>
+				<div class="inner">
+				<form action="updateGetInfo.do">
+					<input type="hidden" id="id" name="id" value="${film.id}" />
+					<input type="submit" value="Update"/><br>
+				</form>
+				</div>
+				<br>
+				<div class="inner">
+				<form action="findFilmAndActorsByFilmId.do">
+					<input type="hidden" id="id" name="id" value="${film.id}" />
+					<input type="submit" value="Get Detailed Film and Actor Information"/>
+				</form>
+				</div>
+				<br>
+			</div>
 			<br>
 			<br>
 			<br>
@@ -38,6 +53,7 @@
 				<h3>No such Film found!</h3>
 		</c:otherwise>
 	</c:choose>
+	<br>
 	<form action="index.do">
 		<input type="submit" value="Back"/><br>
 	</form>

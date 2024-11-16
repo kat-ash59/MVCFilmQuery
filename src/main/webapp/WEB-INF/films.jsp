@@ -12,7 +12,7 @@
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 </head>
 <body>
-	<h1>Film Information</h1>
+	<h3>Film Information</h3>
 	<div class="container">
 	<div class="row">
 		<form action="index.do">

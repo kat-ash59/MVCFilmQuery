@@ -16,7 +16,7 @@ be very very careful with names from index.do to filmcontroller, they must! matc
 
 ### Lab portion of work
 #### User Story #1
-Completed in class
+Completed in class 11/9/24
 
 A user can enter a Film's ID and see the details of the film in a web page. If the film is not found, they see an appropriate message.
 
@@ -44,6 +44,6 @@ completed in class 11/11/24
 A user can search for films by keyword/pattern in title or description. From the resulting list of films, the user can choose to update or delete a record.
 
 #### User Story #6
-
+completed 11/15/24
 
 When a film's details are displayed, its actors and categories are also listed.

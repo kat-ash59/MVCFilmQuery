@@ -88,7 +88,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 					
 					// an explicit commit of the transaction is required to prevent a rollback
 					conn.commit();
-	
+					stmt.close();
+					keys.close();
+					conn.close();
 				}
 				else 
 				{
@@ -97,7 +99,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 				}
 	
 				film=findFilmById(newFilmId);
-				conn.close();
+				
 	
 			} // end try
 			catch (SQLException sqle) 
@@ -147,6 +149,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 				stmt.executeUpdate();
 	
 				conn.commit();
+				stmt.close();
 				conn.close();
 			} 
 			catch (SQLException sqle) 
@@ -194,6 +197,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 			// all data associated with the film has been updated, so
 			// let's commit now
 			conn.commit();
+			stmt.close();
 			conn.close();
 			
 		} 
@@ -207,6 +211,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 				try 
 				{
 					conn.rollback();
+					conn.close();
 				} 
 				catch (SQLException sqle2) 
 				{
@@ -277,42 +282,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor
 	} // end getListOfAllFilms
 	
 	
-	@Override
-	public int getMaxIdFromFilmTable() 
-	{
-		int maxFilmId = 0;
-
-		try 
-		{
-			conn = DriverManager.getConnection(URL, user, pass);
-			String sqltext = "select MAX(id) from film";
-			PreparedStatement stmt = conn.prepareStatement(sqltext);
-			
-			ResultSet results = stmt.executeQuery();
-
-			int maxValue = 0;
-			if (results.next())
-			{
-                // Get the maximum value
-                maxValue = results.getInt(1);
-                //System.out.println("Maximum value: " + maxValue);
-            }
-			maxFilmId = maxValue;
-			//System.out.println("\nThe maxFilmId is " + maxFilmId);
-
-			results.close();
-			stmt.close();
-			conn.close();
-		} 
-		catch (SQLException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return maxFilmId;
-
-	}
 
 	@Override
 	public Film findFilmAndActorsByFilmId(int filmId)

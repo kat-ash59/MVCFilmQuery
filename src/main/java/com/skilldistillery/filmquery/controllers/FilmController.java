@@ -33,28 +33,63 @@ public class FilmController
 		mv.setViewName("index");
 		return mv;
 	}
+
 	
 	@GetMapping(path="findFilmById.do", params="id")
+	public ModelAndView findFilmByFilmId(@RequestParam("id") int filmId)
+	{
+		Film film = null;
+		ModelAndView mv = new ModelAndView();
+		if (filmId != 0)
+		{
+			try
+			{
+				film = dao.findFilmById(filmId);
+				mv.addObject("film", film);
+				mv.setViewName("film");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			mv.addObject("film", film);
+			mv.setViewName("film");
+		}
+		return mv;
+	}  // end findFilmByFilmID
+
+	
+	@GetMapping(path="findFilmAndActorsByFilmId.do", params="id")
 	public ModelAndView findFilmAndActorsByFilmId(@RequestParam("id") int filmId)
 	{
 		Film film = null;
 		ModelAndView mv = new ModelAndView();
 		
-		try
+		if (filmId != 0)
 		{
-			film = dao.findFilmAndActorsByFilmId(filmId);
-			mv.addObject("film", film);
-			mv.setViewName("film");
+			try
+			{
+				film = dao.findFilmAndActorsByFilmId(filmId);
+				mv.addObject("film", film);
+				mv.setViewName("filmAndActor");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
-		catch (Exception e)
+		else
 		{
-			e.printStackTrace();
+			mv.addObject("film", film);
+			mv.setViewName("filmAndActor");
 		}
 		
 		return mv;
 	}  // end findFilmByFilmID
 	
-
 	
 	@GetMapping(path="findAllFilms.do")
 	public ModelAndView findAllFilmsInDB()
@@ -113,21 +148,35 @@ public class FilmController
 	public ModelAndView createFilm(@RequestParam("Title") String Title, 
 									@RequestParam("Description") String Description)
 	{
-		Film film = null;
+		Film film = new Film();
 		ModelAndView mv = new ModelAndView();
-
-		try
+		
+		
+		if ((Title != null) && (!Title.isEmpty()) || (!Title.isBlank()))
 		{
-			film = dao.createFilm(Title, Description);
+			if ((Description != null) && (!Description.isEmpty()) || (!Description.isBlank()))
+			{
+				
+			}
+			try
+			{
+				film.setDescription(Description);
+				film.setTitle(Title);
+				film = dao.createFilm(Title, Description);
+				mv.addObject("film", film);
+				mv.setViewName("film");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				
+			}
+		}
+		else
+		{
 			mv.addObject("film", film);
 			mv.setViewName("film");
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			
-		}
-		
 		return mv;
 	}  // end search for film by keyword
 
@@ -137,27 +186,27 @@ public class FilmController
 	{
 		Boolean successfulDelete = false;
 		ModelAndView mv = new ModelAndView();
-		System.out.println("film id = " + filmId);
 		
-		try
-		{
-			successfulDelete = dao.deleteFilm(filmId);
-			if (successfulDelete)
+		
+			try
 			{
-				mv.addObject("isSuccess", successfulDelete);
-				mv.setViewName("confirmDelete");
+				successfulDelete = dao.deleteFilm(filmId);
+				if (successfulDelete)
+				{
+					mv.addObject("isSuccess", successfulDelete);
+					mv.setViewName("confirmDelete");
+				}
+				else
+				{
+					mv.addObject("isSuccess", false);
+					mv.setViewName("confirmDelete");
+				}
 			}
-			else
+			catch (Exception e)
 			{
-				mv.addObject("isSuccess", false);
-				mv.setViewName("confirmDelete");
+				e.printStackTrace();
+				
 			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			
-		}
 		
 		return mv;
 	}  // end search for film by keyword

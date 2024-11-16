@@ -32,8 +32,6 @@ public interface DatabaseAccessor
 
 	public List<Film> getListOfAllFilms();
 
-	public int getMaxIdFromFilmTable();
-
 	public boolean updateFilm(Film film);
 	
 }  // end interface DatabaseAccessor
